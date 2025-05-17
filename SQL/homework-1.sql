@@ -1,5 +1,6 @@
+use classicmodels;
 -- Question 1. List all customers who have placed at least one order, along with their order dates.
-Select c.customerNumber, c.customerName, o.orderNumber, o.orderDate from customers as c
+Select c.customerName, o.orderDate from customers as c
 join orders as o on c.customerNumber = o.customerNumber
 order by c.customerNumber, o.orderDate desc;
 -- 326 rows returned
@@ -26,7 +27,7 @@ group by c.customerNumber, c.customerName, p.productName
 order by c.customerNumber;
 -- 2532 rows returned
 
--- If the above is by order and not grouped by productName. Not in the homework
+-- If the above is by order and not grouped by productName. Not in the homework. This was the original query and what was desired for homework question 3
 select c.customerNumber, c.customerName, p.productName, o.orderNumber, od.quantityOrdered from customers as c
 join orders as o on c.customerNumber = o.customerNumber
 join orderdetails as od on o.orderNumber = od.orderNumber
