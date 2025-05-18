@@ -56,20 +56,7 @@ use classicmodels;
     e.T- Truncate - used to delete not table but whole data(rows) inside the table
     syntax-
     truncate table_name;
-*/
 
-create table students (
-studentID int,
-name varchar(50),
-email varchar(50),
-courseid	int
-);
-
-alter table students add column age int;
-
-rename table students to learners;
-
-/*
 2. DML - Data Manipulation Language- it works with rows only
 	a. Insert - to insert new rows in table
     syntax:-
@@ -86,6 +73,32 @@ rename table students to learners;
     syntax :- delete from table_name where colname= value;
     c. Update - to change the data of a row of a particular col
     syntax:- update table_name  set col_name = new _value where col= condition;
+
+3. DQL - Data Query Language - to read/ fetch the data
+	select
+4. TCL- Transaction Control Language- it works with dml only(insert/update/delete)
+	it only works if u start the transaction
+    syntax - Start Transaction;
+    a.Commit- Save - to save the changes permanenly.
+    b.Rollback- Undo - to reverse what u just did.
+5. DCL - Data Control Language - Dba- Database Administrators
+	a) Grant- To give permission to a user to select / update/ delete/ insert data
+    b) Revoke- To take permission back of using data.
+*/
+
+create table students (
+studentID int,
+name varchar(50),
+email varchar(50),
+courseid	int
+);
+
+alter table students add column age int;
+
+rename table students to learners;
+
+/*
+DML - Data Manipulation Language- it works with rows only
 */
 
 insert into learners values (1, "Suman", 35, "suman@gmail.com", 10);
@@ -102,16 +115,8 @@ truncate table learners; -- deletes all the rows but not the table
 describe learners; -- to see the structure of table
 
 /*
-3. DQL - Data Query Language - to read/ fetch the data
-	select
-4. TCL- Transaction Control Language- it works with dml only(insert/update/delete)
+TCL- Transaction Control Language- it works with dml only(insert/update/delete)
 	it only works if u start the transaction
-    syntax - Start Transaction;
-    a.Commit- Save - to save the changes permanenly.
-    b.Rollback- Undo - to reverse what u just did.
-5. DCL - Data Control Language - Dba- Database Administrators
-	a) Grant- To give permission to a user to select / update/ delete/ insert data
-    b) Revoke- To take permission back of using data.
 */
 
 select * from learners;
@@ -219,28 +224,3 @@ insert into course values
 (50, 'Fullstack', '1.5 yrs', 1500);
 
 select * from course;
-
-/*
-Setup for students table
-create table students (
-    studentID int,
-    name varchar(50),
-    email varchar(50),
-    courseid	int
-);
-alter table students add column age int;
-rename table students to learners;
-*/
-
-/*
-insert into learners values
-    (1, "Suman", 35, "suman@gmail.com", 10),
-    (2,'Riya',30,'sriya@gmail.com',10),
-    (3,'John',40,'john@gmail.com',20),
-    (4,'Rohit',25,'rohit@gmail.com',20);
-insert into learners values (5,'Nitin',30, 'Nitin@gmail.com',30);
-*/
-
-/*
-alter table learners add column sno int unique auto_increment after name;
-*/
