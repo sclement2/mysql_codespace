@@ -33,6 +33,7 @@ use classicmodels;
 
 /* Type of commands in SQL
 1. DDL- Data definition Language- for structure of table
+    DRCAT <-- functions
 	a.D- drop - to delete the complete table permanently
     Syntax-
     Drop table table_name;
@@ -171,13 +172,13 @@ a.courseid=b.courseid and a.sno>b.sno;
 select * from learners;
 
 /* Text Function
-1.upper- it  is used to see string in capital letters
+1. Upper- it  is used to see string in capital letters
 2. Lower- it  is used to see string in small letters
 3. Trim- it  is used to see string without any extra space on left or right side
 4. Ltrim- it  is used to see string without any extra space on left
 5. Rtrim-  it  is used to see string without any extra space on right
 6. Concat- to see the string togethers
-7. substring
+7. Substring
 8. Left
 9. Right
 */
