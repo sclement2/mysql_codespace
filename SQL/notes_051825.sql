@@ -109,5 +109,74 @@ select *, isnull(state) from offices;
 select *, ifnull(state, "NA") from offices;
 select *, COALESCE(state, addressLine1, addressLine2) from offices;
 
-/* Window Functions
+/* Window Functions-
+1. aggregation function as window function
+	sum, avg, max, min, count
+ syntax :-AGG(column) over ()-- total salary of all emp
+ AGG(column) over (partition by gender)-- total salary of emp gender wise
+2. Ranking Function- 
+	Rank -- to assign positions- if 2 or ore member are sharing same rank next
+			rank will be skipped
+		eg 100, 99, 99, 98, 97:- 1,2,2,4,5 
+        eg 100, 99, 99, 99, 97:- 1,2,2,2,5 
+    Dense_rank - to assign positions-  but never skip any position even if mutiple 
+			members are sharing same rank
+		eg 100, 99, 99, 98, 97:- 1,2,2,3,4 
+        eg 100, 99, 99, 99, 97:- 1,2,2,2,3
+Syntax- select rank/dense_rank() over([partition by col]order by col) from tablename
+3. Value Function-
+	Lead- it just to check next value
+    lag - it just to see previous values
+    first value- to see first value 
+    last value- to see last value 
+
+select * from maydb.emp_table;
+select *,sum(salary) over() from maydb.emp_table;
+select *,sum(salary) over(partition by gender) from maydb.emp_table;
+-- show me all column along with max yrs of  exp in each dept
+select *, max(exp) over (partition by dept) from maydb.emp_table;
+select *, rank() over (order by exp desc) from maydb.emp_table;
+select *, dense_rank() over (order by exp desc) from maydb.emp_table;
+select *, rank() over (order by exp desc) as Rnk, 
+dense_rank() over (order by exp desc) as drnk from maydb.emp_table;
+select *, rank() over (partition by dept order by exp desc) as Rnk, 
+dense_rank() over (partition by dept order by exp desc) as drnk from maydb.emp_table;
+select *, dense_rank() over (partition by dept order by exp desc) as drnk from maydb.emp_table;
 */
+
+SELECT * from classicmodels.orders;
+SELECT *, lead(shippedDate) OVER () from classicmodels.orders;
+SELECT *, lag(shippedDate) OVER () from classicmodels.orders;
+SELECT *, FIRST_VALUE(shippedDate) OVER () from classicmodels.orders;
+select *, last_value(ordernumber) over( range between UNBOUNDED PRECEDING AND
+            UNBOUNDED FOLLOWING) from classicmodels.orders;
+select *, last_value(shippedDate) over( ORDER BY shippedDate range between UNBOUNDED PRECEDING AND
+            UNBOUNDED FOLLOWING) from classicmodels.orders;
+
+select * , row_number() over(order by exp) as sno from maydb.emp_table;
+/* Sub - Query- when a task can be solved with single query so need to use two or more queries
+together it is called sub query or nested query
+*/
+
+-- show me the details of emp who have max salary
+SELECT max(salary) FROM emp_db.emp_table; ;
+SELECT * FROM emp_db.emp_table WHERE
+salary = (SELECT max(salary) FROM emp_db.emp_table);
+
+
+-- show me the emp detail who are working in usa with out using join
+-- table required- Employees, offices
+select *  from employees;
+select * from offices;
+
+USE classicmodels;
+select * from employees where officeCode in (select officeCode from offices where country="USA");
+
+-- show me the detail of emp who earns salary more than avg salary of comp
+select * from emp_db.emp_table where salary > (select avg(salary) from emp_db.emp_table);
+
+-- show me the detail of person with second highest salary 
+select * from emp_db.emp_table where salary = (select max(salary) from emp_db.emp_table where salary < (select max(salary) from emp_db.emp_table));
+
+/* homework-  try the Employee mapping project */
+
