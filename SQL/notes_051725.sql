@@ -136,10 +136,12 @@ rollback;
 
 select * from learners;
 
-insert into learners values (1, "Suman", 35, "suman@gmail.com", 10);
-insert into learners values (2,'Riya',30,'sriya@gmail.com',10),
-(3,'john',40,'john@gmail.com',20),
-(4,'Rohit',25,'rohit@gmail.com',20);
+insert into learners values
+    (1, "Suman", 35, "suman@gmail.com", 10),
+    (2,'Riya',30,'sriya@gmail.com',10),
+    (3,'John',40,'john@gmail.com',20),
+    (4,'Rohit',25,'rohit@gmail.com',20);
+-- insert into learners values (5,'Nitin',30, 'Nitin@gmail.com',30);
 insert into learners values (1, "Suman", 35, "suman@gmail.com", 10);
 
 alter table learners add column sno int unique auto_increment after name;
@@ -187,6 +189,8 @@ select "Data Science", left("Data Science", 4);
 select "Data Science", right("Data Science", 4);
 select monthname(orderdate) , left(monthname(orderdate), 3)  from orders;
 
+select * from learners;
+
 /* homework
 1. Create a table  with name Course- columns- cid, cname, duration, fees
 2. insert the data:
@@ -196,4 +200,47 @@ select monthname(orderdate) , left(monthname(orderdate), 3)  from orders;
     30		commerce	3yrs		 3000
     40		IT			2 yrs		 2000
     50		Fullstack	1.5 yrs		 1500
+*/
+
+-- Homework results
+use classicmodels;
+create table course (
+    cid int,
+    cname varchar(50),
+    duration varchar(25),
+    fees int
+);
+
+insert into course values
+(10, 'DA', '1yr', 1000),
+(20, 'DS', '1yr', 1200),
+(30, 'commerce', '3yrs', 3000),
+(40, 'IT', '2 yrs', 2000),
+(50, 'Fullstack', '1.5 yrs', 1500);
+
+select * from course;
+
+/*
+Setup for students table
+create table students (
+    studentID int,
+    name varchar(50),
+    email varchar(50),
+    courseid	int
+);
+alter table students add column age int;
+rename table students to learners;
+*/
+
+/*
+insert into learners values
+    (1, "Suman", 35, "suman@gmail.com", 10),
+    (2,'Riya',30,'sriya@gmail.com',10),
+    (3,'John',40,'john@gmail.com',20),
+    (4,'Rohit',25,'rohit@gmail.com',20);
+insert into learners values (5,'Nitin',30, 'Nitin@gmail.com',30);
+*/
+
+/*
+alter table learners add column sno int unique auto_increment after name;
 */
