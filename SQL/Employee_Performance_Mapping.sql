@@ -118,7 +118,8 @@ DROP PROCEDURE IF EXISTS get_experienced_employees;
 SHOW PROCEDURE STATUS WHERE Name = 'get_experienced_employees';
 
 /*
-14.	Write a query using stored functions in the project table to check whether the job profile assigned to each employee in the data science team matches the organization’s set standard.
+14.	Write a query using stored functions in the project table to check whether the job profile assigned 
+to each employee in the data science team matches the organization’s set standard.
 
 The standard being:
 For an employee with experience less than or equal to 2 years assign 'JUNIOR DATA SCIENTIST',
@@ -127,12 +128,33 @@ For an employee with the experience of 5 to 10 years assign 'SENIOR DATA SCIENTI
 For an employee with the experience of 10 to 12 years assign 'LEAD DATA SCIENTIST',
 For an employee with the experience of 12 to 16 years assign 'MANAGER'.
 */
+select EMP_ID, FIRST_NAME, LAST_NAME, EXP, ROLE,
+case 
+    when EXP <= 2 then 'JUNIOR DATA SCIENTIST'
+    when EXP > 2 and EXP <= 5 then 'ASSOCIATE DATA SCIENTIST'
+    when EXP > 5 and EXP <= 10 then 'SENIOR DATA SCIENTIST'
+    when EXP > 10 and EXP <= 12 then 'LEAD DATA SCIENTIST'
+    when EXP > 12 and EXP <= 16 then 'MANAGER'
+end as JOB_PROFILE
+from employee.emp_record_table;
+
+/*
+15.	Create an index to improve the cost and performance of the query to find the employee 
+whose FIRST_NAME is ‘Eric’ in the employee table after checking the execution plan.
+*/
 
 
 /*
-15.	Create an index to improve the cost and performance of the query to find the employee whose FIRST_NAME is ‘Eric’ in the employee table after checking the execution plan.
-
-16.	Write a query to calculate the bonus for all the employees, based on their ratings and salaries (Use the formula: 5% of salary * employee rating).
-
-17.	Write a query to calculate the average salary distribution based on the continent and country. Take data from the employee record table.
+16.	Write a query to calculate the bonus for all the employees, based on their ratings and 
+salaries (Use the formula: 5% of salary * employee rating).
 */
+select  EMP_ID, FIRST_NAME, LAST_NAME, SALARY, EMP_RATING, (0.05 * SALARY * EMP_RATING ) as Bonus 
+from employee.emp_record_table;
+
+/*
+17.	Write a query to calculate the average salary distribution based on the continent and 
+country. Take data from the employee record table.
+*/
+select AVG(SALARY) as avg_salary, CONTINENT, COUNTRY from employee.emp_record_table
+group by CONTINENT, COUNTRY
+ORDER BY CONTINENT, COUNTRY;
