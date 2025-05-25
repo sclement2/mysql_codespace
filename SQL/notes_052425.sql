@@ -25,7 +25,7 @@ from emp_db.emp_table e
 GROUP BY e.`MANAGER_ID`;
 
 
-select * from emp_db.emp_table sub where sub.`MANAGER_ID` =
+--select * from emp_db.emp_table sub where sub.`MANAGER_ID` =
 
 -- Find products that are more expensive than the average price(buy price ) of products in the same product line.
 -- 55 rows
