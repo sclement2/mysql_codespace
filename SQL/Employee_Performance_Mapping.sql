@@ -12,7 +12,7 @@ select `EMP_ID`, `FIRST_NAME`, `LAST_NAME`, `GENDER`, `DEPT` from employee.emp_r
 ●	between two and four
 */
 select `EMP_ID`, `FIRST_NAME`, `LAST_NAME`, `GENDER`, `DEPT`, `EMP_RATING` from employee.emp_record_table
-where `EMP_RATING` < 2;
+where `EMP_RATING` < 2; -- Less than two
 select `EMP_ID`, `FIRST_NAME`, `LAST_NAME`, `GENDER`, `DEPT`, `EMP_RATING` from employee.emp_record_table
 where `EMP_RATING` > 4;
 select `EMP_ID`, `FIRST_NAME`, `LAST_NAME`, `GENDER`, `DEPT`, `EMP_RATING` from employee.emp_record_table
@@ -158,3 +158,7 @@ country. Take data from the employee record table.
 select AVG(SALARY) as avg_salary, CONTINENT, COUNTRY from employee.emp_record_table
 group by CONTINENT, COUNTRY
 ORDER BY CONTINENT, COUNTRY;
+
+select * from employee.emp_record_table where FIRST_NAME = 'Eric';
+EXPLAIN select * from employee.emp_record_table where FIRST_NAME = 'Eric';
+EXPLAIN FORMAT=JSON select * from employee.emp_record_table where FIRST_NAME = 'Eric';
