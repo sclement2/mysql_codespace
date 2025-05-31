@@ -1,4 +1,3 @@
--- Active: 1747550732943@@127.0.0.1@3306@employee
 /*
 3.	Write a query to fetch EMP_ID, FIRST_NAME, LAST_NAME, GENDER, and DEPARTMENT from the employee 
 record table, and make a list of employees and details of their department.
@@ -80,16 +79,15 @@ FROM
 than six thousand. Take data from the employee record table.
 */
 CREATE VIEW high_salary_employees AS
-SELECT 
-    EMP_ID, 
-    FIRST_NAME, 
-    LAST_NAME, 
-    SALARY, 
-    COUNTRY
+SELECT `EMP_ID`, `FIRST_NAME`, `LAST_NAME`, `GENDER`, `ROLE`, `EXP`, `DEPT`, `SALARY`, `COUNTRY`
 FROM
     employee.emp_record_table
 WHERE 
     SALARY > 6000;
+/*
+Logic - use “Create View” and specify the query to “Select” employees “Where” their “salary” is greater than 6000
+*/
+
 -- To view the data in the created view
 SELECT * FROM high_salary_employees;
 
@@ -97,8 +95,12 @@ SELECT * FROM high_salary_employees;
 12.	Write a nested query to find employees with experience of more than ten years. 
 Take data from the employee record table.
 */
-select EMP_ID, FIRST_NAME, LAST_NAME, EXP from employee.emp_record_table
-where EXP > (select distinct 10 from employee.emp_record_table);
+SELECT EMP_ID, FIRST_NAME, LAST_NAME, GENDER, ROLE, EXP, DEPT, COUNTRY from employee.emp_record_table
+where EMP_ID IN (select EMP_ID from employee.emp_record_table where `EXP` > 10);
+/* Logic - Using a nested query the idea is to find a list of “emp_id” “WHERE” the employee’s “exp” 
+is greater than 10. This list is then used as part of the “WHERE” clause for the outer query. 
+“SELECT” “emp_id” that are in the list obtained from the subquery.
+*/
 
 /*
 13.	Write a query to create a stored procedure to retrieve the details of the employees 
@@ -107,7 +109,9 @@ whose experience is more than three years. Take data from the employee record ta
 DELIMITER //
 CREATE PROCEDURE get_experienced_employees()
 BEGIN
-    SELECT EMP_ID, FIRST_NAME, LAST_NAME, EXP FROM employee.emp_record_table WHERE EXP > 3;
+SELECT EMP_ID, FIRST_NAME, LAST_NAME, GENDER, ROLE, EXP, DEPT, COUNTRY 
+FROM employee.emp_record_table 
+WHERE EXP > 3;
 END //
 DELIMITER ;
 -- To call the stored procedure
@@ -128,15 +132,54 @@ For an employee with the experience of 5 to 10 years assign 'SENIOR DATA SCIENTI
 For an employee with the experience of 10 to 12 years assign 'LEAD DATA SCIENTIST',
 For an employee with the experience of 12 to 16 years assign 'MANAGER'.
 */
-select EMP_ID, FIRST_NAME, LAST_NAME, EXP, ROLE,
-case 
-    when EXP <= 2 then 'JUNIOR DATA SCIENTIST'
-    when EXP > 2 and EXP <= 5 then 'ASSOCIATE DATA SCIENTIST'
-    when EXP > 5 and EXP <= 10 then 'SENIOR DATA SCIENTIST'
-    when EXP > 10 and EXP <= 12 then 'LEAD DATA SCIENTIST'
-    when EXP > 12 and EXP <= 16 then 'MANAGER'
-end as JOB_PROFILE
-from employee.emp_record_table;
+
+/*
+Logic - First, create a stored function that returns the standard job title based on experience. 
+The input to the function is the experience. Next, use that function to check whether each 
+employee's assigned role matches the expected role based on their experience. 
+The function is used in a Query to Compare Assigned Role vs.Standard Role
+*/
+
+DELIMITER //
+
+CREATE FUNCTION GetStandardJobProfile(exp INT)
+RETURNS VARCHAR(50)
+DETERMINISTIC
+BEGIN
+    DECLARE profile VARCHAR(50);
+
+    IF exp <= 2 THEN
+        SET profile = 'JUNIOR DATA SCIENTIST';
+    ELSEIF exp > 2 AND exp <= 5 THEN
+        SET profile = 'ASSOCIATE DATA SCIENTIST';
+    ELSEIF exp > 5 AND exp <= 10 THEN
+        SET profile = 'SENIOR DATA SCIENTIST';
+    ELSEIF exp > 10 AND exp <= 12 THEN
+        SET profile = 'LEAD DATA SCIENTIST';
+    ELSEIF exp > 12 AND exp <= 16 THEN
+        SET profile = 'MANAGER';
+    ELSE
+        SET profile = 'UNKNOWN';
+    END IF;
+
+    RETURN profile;
+END //
+
+
+DELIMITER ;
+
+SELECT 
+    EMP_ID,
+    FIRST_NAME,
+    LAST_NAME,
+    EXP,
+    ROLE AS assigned_role,
+    GetStandardJobProfile(EXP) AS expected_role,
+    CASE 
+        WHEN ROLE = GetStandardJobProfile(EXP) THEN 'MATCH'
+        ELSE 'MISMATCH'
+    END AS role_check
+FROM employee.data_science_team;
 
 /*
 15.	Create an index to improve the cost and performance of the query to find the employee 
