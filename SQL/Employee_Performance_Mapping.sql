@@ -1,4 +1,93 @@
 /*
+1.	Create a database named employee, then import data_science_team.csv proj_table.csv and emp_record_table.csv into the employee database from the given resources.
+*/
+CREATE DATABASE IF NOT EXISTS employee;
+USE employee;
+
+-- Importing data from CSV files into the employee database
+LOAD DATA INFILE '/path/to/data_science_team.csv'
+INTO TABLE data_science_team
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS;
+LOAD DATA INFILE '/path/to/proj_table.csv'
+INTO TABLE proj_table
+FIELDS TERMINATED BY ','    
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS;
+LOAD DATA INFILE '/path/to/emp_record_table.csv'
+INTO TABLE emp_record_table
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS;
+-- Note: Replace '/path/to/' with the actual path where the CSV files are located.
+-- Ensure that the CSV files are accessible by the MySQL server and that the user has the necessary permissions to load data.
+-- Ensure that the tables data_science_team, proj_table, and emp_record_table are created before loading data.
+-- The tables can be created using the following SQL commands:
+
+DROP TABLE IF EXISTS `proj_table`;
+CREATE TABLE `proj_table` (
+  `PROJECT_ID` text,
+  `PROJ_NAME` text,
+  `DOMAIN` text,
+  `START _DATE` text,
+  `CLOSURE_DATE` text,
+  `DEV_QTR` text,
+  `STATUS` text
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+DROP TABLE IF EXISTS `emp_record_table`;
+CREATE TABLE `emp_record_table` (
+  `EMP_ID` text,
+  `FIRST_NAME` text,
+  `LAST_NAME` text,
+  `GENDER` text,
+  `ROLE` text,
+  `DEPT` text,
+  `EXP` int DEFAULT NULL,
+  `COUNTRY` text,
+  `CONTINENT` text,
+  `SALARY` int DEFAULT NULL,
+  `EMP_RATING` int DEFAULT NULL,
+  `MANAGER_ID` text,
+  `PROJ_ID` text
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+DROP TABLE IF EXISTS `data_science_team`;
+CREATE TABLE `data_science_team` (
+  `EMP_ID` text,
+  `FIRST_NAME` text,
+  `LAST_NAME` text,
+  `GENDER` text,
+  `ROLE` text,
+  `DEPT` text,
+  `EXP` int DEFAULT NULL,
+  `COUNTRY` text,
+  `CONTINENT` text
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+/*
+2.	Create an ER diagram for the given employee database.
+*/
+-- The ER diagram can be created using a database design tool like MySQL Workbench,
+-- Lucidchart, or any other ER diagram tool. The diagram should include the following entities:
+-- 1. Employee (emp_record_table)
+-- 2. Data Science Team (data_science_team)
+-- 3. Project (proj_table)
+-- The relationships between these entities can be defined as follows:
+-- 1. Employee has a one-to-many relationship with Project (one employee can manage multiple projects).
+-- 2. Data Science Team is a subset of Employee (one employee can be part of the data science team).
+-- 3. Employee has a one-to-many relationship with itself (one employee can manage multiple employees).
+-- The ER diagram should include the attributes of each entity and the relationships between them.
+-- The ER diagram can be visualized using the following SQL commands to describe the relationships:
+--
+-- Employee (emp_record_table):
+--   - EMP_ID (Primary Key)
+
+/*
 3.	Write a query to fetch EMP_ID, FIRST_NAME, LAST_NAME, GENDER, and DEPARTMENT from the employee 
 record table, and make a list of employees and details of their department.
 */
@@ -181,11 +270,28 @@ SELECT
     END AS role_check
 FROM employee.data_science_team;
 
+drop INDEX firstname_idx on employee.emp_record_table;
 /*
 15.	Create an index to improve the cost and performance of the query to find the employee 
 whose FIRST_NAME is ‘Eric’ in the employee table after checking the execution plan.
 */
+-- First, check the execution plan without an index
+select * from employee.emp_record_table
+where FIRST_NAME = 'Eric';
 
+EXPLAIN select * from employee.emp_record_table where FIRST_NAME = 'Eric';
+EXPLAIN FORMAT=JSON select * from employee.emp_record_table where FIRST_NAME = 'Eric';
+
+-- Now, create an index on the FIRST_NAME column
+alter table employee.emp_record_table
+modify column FIRST_NAME VARCHAR(30);
+create index firstname_idx on employee.emp_record_table(first_name);
+select * from employee.emp_record_table
+where FIRST_NAME = 'Eric';
+
+-- Check the execution plan again after creating the index
+EXPLAIN select * from employee.emp_record_table where FIRST_NAME = 'Eric';
+EXPLAIN FORMAT=JSON select * from employee.emp_record_table where FIRST_NAME = 'Eric';
 
 /*
 16.	Write a query to calculate the bonus for all the employees, based on their ratings and 
@@ -198,10 +304,6 @@ from employee.emp_record_table;
 17.	Write a query to calculate the average salary distribution based on the continent and 
 country. Take data from the employee record table.
 */
-select AVG(SALARY) as avg_salary, CONTINENT, COUNTRY from employee.emp_record_table
+select ROUND(AVG(SALARY),2) as avg_salary, CONTINENT, COUNTRY from employee.emp_record_table
 group by CONTINENT, COUNTRY
 ORDER BY CONTINENT, COUNTRY;
-
-select * from employee.emp_record_table where FIRST_NAME = 'Eric';
-EXPLAIN select * from employee.emp_record_table where FIRST_NAME = 'Eric';
-EXPLAIN FORMAT=JSON select * from employee.emp_record_table where FIRST_NAME = 'Eric';
