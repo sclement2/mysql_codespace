@@ -108,6 +108,31 @@ data_science_team:
   - EMP_ID (Foreign Key)
 proj_table:
   - PROJECT_ID (Primary Key)
+
+Information on how to dump a database schema to use as an import to a ERD tool can be found here:
+https://www.slingacademy.com/article/mysql-8-ways-to-dump-a-database-to-an-sql-file/
+
+Solution #1: mysqldump Utility <-- This was used
+
+Solution description: The mysqldump utility is a command-line tool provided by MySQL for exporting databases into SQL text files. This method is straightforward, highly customizable, and widely used.
+
+Open a command prompt or terminal.
+Use the mysqldump command with the correct parameters.
+Redirect the output to an SQL file.
+mysqldump -u username -p database_name > database_dump.sql <-- This needs to be adjusted. H? and port added??
+Notes: mysqldump is a reliable, but may be slower on larger databases. It locks the tables by default during the dump to ensure a consistent snapshot, impeding write operations. Use the --single-transaction option for InnoDB tables to avoid this.
+
+Solution #2: MySQL Shell
+
+MySQL Shell is an advanced client and code editor for MySQL. It supports JavaScript, Python, and SQL modes and can be used to export databases more efficiently than mysqldump.
+
+Open MySQL Shell and connect to your database.
+Switch to SQL mode if necessary.
+Run the dump utility.
+\connect user@localhost
+\sql
+UTIL EXPORT SCHEMA <database_name> TO 'path/to/dump_file.sql'; <-- Did not work
+
 /*
 
 3.	Write a query to fetch EMP_ID, FIRST_NAME, LAST_NAME, GENDER, and DEPARTMENT from the employee 
